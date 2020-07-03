@@ -4,17 +4,14 @@ import api.compagnie.connection.HibernateUtil;
 import api.compagnie.controler.ArticleControler;
 import api.compagnie.controler.PhotoControler;
 import api.compagnie.entity.Article;
-import api.compagnie.entity.*;
+import api.compagnie.entity.Photo;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import com.util.ToolBox;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Date;
 import java.util.List;
-import java.util.Scanner;
 import java.util.Set;
 
 @Path("/Article")
@@ -38,6 +35,7 @@ public class ArticleService {
             article = controler.getAll();
             tx.commit();
         }catch (Exception e){
+            //sortie exception
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }finally {
             if(session != null){
@@ -45,10 +43,10 @@ public class ArticleService {
             }
         }
 
+        //sortie article non trouvé => erreur 404
         if(article == null)
             return Response.status(Response.Status.NOT_FOUND).build();
-
-
+        //sortie correcte!
         return Response.status(Response.Status.OK).entity(article).build();
     }
 
