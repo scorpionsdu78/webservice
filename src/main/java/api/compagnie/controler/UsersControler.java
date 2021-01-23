@@ -59,4 +59,13 @@ public class UsersControler {
         session.delete(users);
     }
 
+    public Users getUserByName(String name) {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Query<Users> query = session.createQuery("select u from users u where u.username =?1", Users.class);
+        query.setParameter(1,name);
+        System.out.println(query);
+        Users users = query.getSingleResult();
+        return users;
+    }
+
 }

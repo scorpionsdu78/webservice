@@ -17,6 +17,7 @@ public class Article {
     int idarticle;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     Date publication;
+    @Column(columnDefinition = "longtext")
     String content;
     String titre;
     @Column(columnDefinition = "TINYINT")

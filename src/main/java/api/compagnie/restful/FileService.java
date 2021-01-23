@@ -1,8 +1,13 @@
 package api.compagnie.restful;
 
 
+import api.compagnie.connection.HibernateUtil;
+import api.compagnie.controler.PhotoControler;
+import api.compagnie.entity.Photo;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,9 +23,26 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 public class FileService {
     public static String basePath = "/home/utilisateur/IdeaProjects/stage/compagnieServer/image/";
 
+    private PhotoControler photoControler;
+
+    public FileService() {
+        photoControler = new PhotoControler();
+    }
+
+    @GET
+    @Path("/{url}")
+    @Produces("image/jpg")
+    public Response getFile(@PathParam("url") String url) {
+        File file = new File(basePath+"/"+url);
+        ResponseBuilder response = Response.ok((Object) file);
+        response.header("Content-Disposition","attachment; filename=\"javatpoint_image.png\"");
+        return response.build();
+
+    }
+
     @GET
     @Produces("image/jpg")
-    public Response getFile() {
+    public Response getDefault() {
         File file = new File(basePath+"/panda.JPG");
         ResponseBuilder response = Response.ok((Object) file);
         response.header("Content-Disposition","attachment; filename=\"javatpoint_image.png\"");
@@ -29,13 +51,16 @@ public class FileService {
     }
 
     @POST
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadFile(
             @FormDataParam("file") InputStream uploadedInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail) {
         String fileLocation = basePath + fileDetail.getFileName();
         System.out.println(fileLocation);
+
+        Photo photo =null;
+
         //saving file
         try {
             System.out.println("entrez dans le try");
@@ -48,8 +73,17 @@ public class FileService {
             }
             out.flush();
             out.close();
+
+            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+            Transaction tx=session.beginTransaction();
+
+            photo = photoControler.insertPhoto(fileDetail.getFileName(),null,null);
+
+            tx.commit();
+
+
         } catch (Exception e) {e.printStackTrace();}
-        String output = "File successfully uploaded to : " + fileLocation;
-        return Response.status(Response.Status.OK).entity(output).build();
+        String output = fileDetail.getFileName();
+        return Response.status(Response.Status.OK).entity(photo).build();
     }
 }

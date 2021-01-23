@@ -111,8 +111,11 @@ public class SpectacleService {
 
             Repertoire repertoire = session.get(Repertoire.class,spectacle.getRepertoire().getIdrepertoire());
 
-            spectacle1 = controler.insert(spectacle.getNom(),spectacle.getDates(),spectacle.getNbplace(),spectacle.getNbplace(),spectacle.getPrix(),repertoire);
+            repertoire.setActive(Boolean.TRUE);
 
+            session.save(repertoire);
+
+            spectacle1 = controler.insert(spectacle.getNom(),spectacle.getDates(),spectacle.getNbplace(),spectacle.getNbplace(),spectacle.getPrix(),repertoire);
 
 
             tx.commit();

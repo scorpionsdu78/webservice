@@ -1,6 +1,7 @@
 package api.compagnie.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -25,7 +26,8 @@ public class Spectacle {
     @JoinColumn(name = "repertoire_idrepertoire")
     private Repertoire repertoire;
 
-    @OneToMany(mappedBy = "spectacle",fetch = FetchType.EAGER)
+    @JsonIgnore
+    @OneToMany(mappedBy = "spectacle",fetch = FetchType.LAZY)
     private Set<Reservation> reservations;
 
     public Spectacle() {

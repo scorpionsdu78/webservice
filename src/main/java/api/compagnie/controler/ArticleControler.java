@@ -31,7 +31,7 @@ public class ArticleControler {
         return set;
     }
 
-    public Article Update(int id, Date publi, String content, String titre, Boolean featured){
+    public Article Update(int id, Date publi, String content, String titre, Boolean featured, Set<Photo> photos){
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Article article = session.get(Article.class,id);
         article.setPublication(publi);
@@ -41,6 +41,8 @@ public class ArticleControler {
             article.setTitre(titre);
         if(featured!=null && featured != article.getFeatured())
             article.setFeatured(featured);
+        if(photos!=null && !photos.isEmpty())
+            article.setPhotos(photos);
         session.save(article);
         return article;
     }

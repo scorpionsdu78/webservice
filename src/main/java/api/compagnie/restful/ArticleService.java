@@ -118,13 +118,14 @@ public class ArticleService {
         Article articlemod = null;
         Transaction tx = null;
 
-
+        System.out.println(id);
         try{
             session = HibernateUtil.getSessionFactory().getCurrentSession();
             tx=session.beginTransaction();
-            articlemod = controler.Update(id,article.getPublication(),article.getContent(),article.getTitre(),article.getFeatured());
+            articlemod = controler.Update(id,article.getPublication(),article.getContent(),article.getTitre(),article.getFeatured(),article.getPhotos());
             tx.commit();
         }catch (Exception e){
+            e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }finally {
             if(session != null){

@@ -10,14 +10,49 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mariadb.jdbc.internal.common.packet.OKPacket;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 import java.util.Scanner;
 
+@Path("Photo")
 public class PhotoService {
     PhotoControler controler;
 
     public PhotoService(){
         controler = new PhotoControler();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAll() {
+        Session session = null;
+        List<Photo> photoList = null;
+        Transaction tx = null;
+
+        try{
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            tx=session.beginTransaction();
+            photoList = controler.getAll();
+            tx.commit();
+        }catch (Exception e){
+            if(tx != null)
+                tx.rollback();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }finally {
+            if(session != null){
+                session.close();
+            }
+        }
+
+        if(photoList == null)
+            return Response.status(Response.Status.NOT_FOUND).build();
+
+        return Response.status(Response.Status.OK).entity(photoList).build();
+
     }
 
     public Response getByid(){

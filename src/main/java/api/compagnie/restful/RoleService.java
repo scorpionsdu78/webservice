@@ -157,6 +157,41 @@ public class RoleService {
     }
 
     @Path("/{id}")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response InsertMembre(@PathParam("id") int id, List<Membre> membres) {
+        Session session = null;
+        Transaction tx = null;
+        Role role1 = null;
+
+        System.out.println(membres);
+        try{
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            tx = session.beginTransaction();
+
+            role1 = controler.updateMembres(id,membres);
+
+            tx.commit();
+
+        }catch (Exception e){
+            if(tx != null){
+                tx.rollback();
+            }
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        } finally {
+            if(session != null){
+                session.close();
+            }
+        }
+
+        if(role1 == null)
+            return Response.status(Response.Status.NOT_FOUND).build();
+
+        return Response.status(Response.Status.OK).entity(role1).build();
+    }
+
+    @Path("/{id}")
     @DELETE
     public void delete(@PathParam("id") int id){
         Session session = null;

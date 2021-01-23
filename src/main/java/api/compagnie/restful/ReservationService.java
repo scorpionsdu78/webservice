@@ -97,7 +97,7 @@ public class ReservationService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response insert(Reservation reservation, @QueryParam("idSpectacle") int id){
+    public Response insert(Reservation reservation){
         Reservation reservation1 = null;
         Session session = null;
         Transaction tx = null;
@@ -110,6 +110,8 @@ public class ReservationService {
         try{
             session = HibernateUtil.getSessionFactory().getCurrentSession();
             tx = session.beginTransaction();
+
+            int id = reservation.getSpectacle().getIdspectacle();
 
             Spectacle spectacle = session.get(Spectacle.class,id);
 

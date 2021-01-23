@@ -1,6 +1,9 @@
 package api.compagnie.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
+import org.glassfish.jersey.internal.util.collection.Views;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -16,9 +19,9 @@ public class Role {
     String nom;
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name="membre_has_role",joinColumns = {@JoinColumn(name="role_idrole")},inverseJoinColumns = {@JoinColumn(name="Membre_idMembre")})
-    Set<Membre> membreSet;
+    Set<Membre> membreSet = new HashSet<>();
 
     public Role(String nom) {
         this.nom = nom;

@@ -11,7 +11,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import javax.mail.*;
+import javax.mail.internet.*;
+import javax.activation.*;
 
 @Path("/Message")
 public class MessageService {
@@ -87,6 +90,8 @@ public class MessageService {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createMessage(Message message) {
 
+
+
         Session session = null;
         Transaction tx = null;
 
@@ -97,10 +102,8 @@ public class MessageService {
             tx=session.beginTransaction();
             newMessage = controler.insertMessage(message);
             tx.commit();
+
         }catch (Exception e){
-            if(tx != null){
-                tx.rollback();
-            }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }finally {
             if(session != null){

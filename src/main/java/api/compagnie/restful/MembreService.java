@@ -6,6 +6,7 @@ import api.compagnie.controler.PhotoControler;
 import api.compagnie.entity.Membre;
 import api.compagnie.entity.Photo;
 import api.compagnie.entity.Role;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -91,6 +92,7 @@ public class MembreService {
         Membre membre1 = null;
         Transaction tx = null;
 
+        System.out.println("coucou");
         try {
             session = HibernateUtil.getSessionFactory().getCurrentSession();
             tx = session.beginTransaction();
@@ -126,6 +128,7 @@ public class MembreService {
 
         return Response.status(Response.Status.OK).entity(membre1).build();
     }
+
 
     @Path("/{id}")
     @DELETE
@@ -215,7 +218,7 @@ public class MembreService {
             session = HibernateUtil.getSessionFactory().getCurrentSession();
             tx = session.beginTransaction();
 
-            membre1 = controler.update(id,membre.getNom(),membre.getPrenom(),membre.getDescription());
+            membre1 = controler.update(id,membre.getNom(),membre.getPrenom(),membre.getDescription(),membre.getPhotos(),membre.getRoles());
 
             tx.commit();
 

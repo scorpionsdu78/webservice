@@ -13,6 +13,7 @@ public class Membre {
     int idMembre;
     String nom;
     String prenom;
+    @Column(columnDefinition = "longtext")
     String description;
 
     @ManyToMany(fetch = FetchType.EAGER)

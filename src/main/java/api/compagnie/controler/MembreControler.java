@@ -3,6 +3,7 @@ package api.compagnie.controler;
 import api.compagnie.connection.HibernateUtil;
 import api.compagnie.entity.Membre;
 import api.compagnie.entity.Photo;
+import api.compagnie.entity.Role;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -29,7 +30,7 @@ public class MembreControler {
         return membre;
     }
 
-    public Membre update(int id, String nom, String prenom, String description){
+    public Membre update(int id, String nom, String prenom, String description, Set<Photo> photos, Set<Role> roles){
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Membre membre = session.get(Membre.class,id);
         System.out.println(description);
@@ -45,6 +46,10 @@ public class MembreControler {
             System.out.println("entrez dans le if3");
             membre.setDescription(description);
         }
+        if(photos!=null)
+            membre.setPhotos(photos);
+        if(roles!=null)
+            membre.setRoles(roles);
         session.save(membre);
         return membre;
     }

@@ -5,10 +5,18 @@ import api.compagnie.entity.Article;
 import api.compagnie.entity.Membre;
 import api.compagnie.entity.Photo;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 
+import java.util.List;
 import java.util.Set;
 
 public class PhotoControler {
+
+    public List<Photo> getAll(){
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Query<Photo> query = session.createQuery("select p from photo p",Photo.class);
+        return query.getResultList();
+    }
 
     public Photo getByID(int id){
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();

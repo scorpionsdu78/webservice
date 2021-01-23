@@ -6,7 +6,10 @@ import api.compagnie.entity.Role;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class RoleControler {
 
@@ -38,6 +41,20 @@ public class RoleControler {
         Role role = session.get(Role.class,id);
         if(nom!=null && nom.isEmpty())
             role.setNom(nom);
+        session.save(role);
+        return role;
+    }
+
+    public Role updateMembres(int id, List<Membre> membres){
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Role role = session.get(Role.class,id);
+        Set<Membre> membreList = new HashSet<>();
+        if(membres != null) {
+            for(Membre m : membres) {
+                membreList.add(session.get(Membre.class,m.getIdMembre()));
+            }
+            role.setMembreSet(membreList);
+        }
         session.save(role);
         return role;
     }

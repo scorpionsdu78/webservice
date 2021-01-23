@@ -18,7 +18,7 @@ public class Reservation {
     private String nom_reservation;
     private int nb_place;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "spectacle_idspectacle")
     private Spectacle spectacle;
 
@@ -55,7 +55,6 @@ public class Reservation {
         this.nb_place = nb_place;
     }
 
-    @JsonIgnore
     public Spectacle getSpectacle() {
         return spectacle;
     }

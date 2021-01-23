@@ -23,16 +23,20 @@ public class UsersService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response gets(){
+    @Path("/{username}")
+    public Response checkPassword(@PathParam("username") String user){
         Session session = null;
         Transaction tx = null;
-        List<Users> usersList = null;
+        Users u;
+
 
         try{
             session = HibernateUtil.getSessionFactory().getCurrentSession();
             tx = session.beginTransaction();
-            usersList = controler.getUsers();
+            u = controler.getUserByName(user);
+            System.out.println("user get:" + u);
         }catch (Exception e){
+            System.out.println(e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }finally {
             if(session != null){
@@ -40,13 +44,13 @@ public class UsersService {
             }
         }
 
-        if(usersList == null)
+        if(u == null)
             return Response.status(Response.Status.NOT_FOUND).build();
 
-        return Response.status(Response.Status.OK).entity(usersList).build();
+        return Response.status(Response.Status.OK).entity(u).build();
     }
 
-    @Path("/{id}")
+    /*@Path("/{id}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getByID(@PathParam("id") int id){
@@ -70,8 +74,9 @@ public class UsersService {
             return Response.status(Response.Status.NOT_FOUND).build();
 
         return Response.status(Response.Status.OK).entity(users).build();
-    }
+    }*/
 
+    /*
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -99,7 +104,7 @@ public class UsersService {
             return Response.status(Response.Status.NOT_FOUND).build();
 
         return Response.status(Response.Status.OK).entity(user).build();
-    }
+    }*/
 
     @PUT
     @Path("/{id}")
@@ -151,4 +156,6 @@ public class UsersService {
                 session.close();
         }
     }
+
+
 }
